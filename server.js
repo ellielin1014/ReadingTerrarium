@@ -5,154 +5,98 @@
 
    The RESTful API in this case is for a networked thermostat.
    The endpoints are:
-   /temperature  - temperature in degrees C, a float
-   /setpoint     - the temperature setpoint
-   /status       - heat, cool, or fan
-   /motion       - last time a motion sensor on the thermostat was triggered
-   /datetime     - the current date and time
+   /temp              - temperature, a float
+   /moisture          - moisture, a float
+   /setpoint_temp_min - the temperature setpoint minimum
+   /setpoint_temp_max - the temperature setpoint maximum
+   /setpoint_moisture_min - the moisture setpoint miniumn
+   /setpoint_moisture_max - the moisture setpoint maximum
+   /status            - healthy, unhealthy
+   /song              - the name of the song, a string
+   /story             - the name of the story, a string
 
    You can GET the value of any of the endpoints, or
    you can POST to them.
 */
 
 let express = require('express');	         // include the express library
-let server = express();					         // create a server using express
+const app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);				         // create a server using express
 let bodyParser = require('body-parser');	   // include body-parser
-server.use('/', express.static('public'));   // serve static files from /public
 
-// get the time:
-let now = new Date();
+server.listen(process.env.PORT);             // start the server
+
+app.use('/', express.static('public'));   // app static files from /public
+
+app.get("/", function(request, response) {
+  response.sendFile(__dirname + "/index.html");
+});
+
 
 // make a data object representing all your parameters:
+let range = {
+   'setpoint_temp_min': 10.0,        // the temperature setpoint
+   'setpoint_temp_max': 30.0,
+   'setpoint_moisture_min': 20.0,
+   'setpoint_moisture_max': 40.0
+}
+
 let thermostat = {
-   temp: 0.0,   // temperature in degrees C, a float
-   moisture: 0.0,
-   setpoint_temp_min: 0.0,        // the temperature setpoint
-   setpoint_temp_max: 0.0,
-   setpoint_moisture_min: 0.0,
-  setpoint_moisture_max: 0.0,
-   status: 'healthy'       // heat, cool, or fan
-}
-let sound = {
-  song: 2,  // the number of the song, int
-  story: 4  // the number of the story, int
+   'temp': 120.0,            // temperature in degrees C, a float
+   'moisture': 30.0,
+   'status': 'healthy',
+   'song': 'A song',  // the number of the song, int
+   'story': 'A story'// healthy
 }
 
-// you need a couple of parsers for the body of a POST request:
-server.use(bodyParser.json()); 						  // for  application/json
-server.use(bodyParser.urlencoded({ extended: true })); // for application/x-www-form-urlencoded
 
 
-// this handles all GET requests. You may want to make
-// separate functions for each API endpoint instead:
-function handleGetRequest(request, response) {
-   // print out the info from the request:
-   printRequestInfo(request);
-   let result = '';
-   // find out the REST API path, and get the appropriate property:
-   switch (request.path) {
-      case '/temp':
-         result = thermostat.temp;
-         break;
-      case '/moisture':
-         result = thermostat.moisture;
-         break;
-      case '/setpoint_temp_max':
-         result = thermostat.setpoint_temp_max;
-         break;
-      case '/setpoint_temp_min':
-         result = thermostat.setpoint_temp_min;
-         break;
-      case '/setpoint_moisture_max':
-         result = thermostat.setpoint_moisture_max;
-         break;
-      case '/setpoint_moisture_min':
-        result = thermostat.setpoint_moisture_min;
-        break;
-      case '/status':
-         result = thermostat.status;
-         break;
-      case '/song':
-         result = sound.song;
-         break;
-      case '/story':
-         result = sound.story;
-         break;
-   }
-   response.end(result.toString());
-}
+//handle GET requests
+app.get("/thermostat", function(request, response) {
+  thermostat.status = (thermostat.temp > range.setpoint_temp_min && thermostat.temp < range.setpoint_temp_max && thermostat.moisture > range.setpoint_moisture_min && thermostat.moisture < range.setpoint_moisture_max) ? 'healthy' : 'unhealthy';
+  io.emit('thermostat', thermostat);
+});
 
-// this handlles all POST requests. You may want to make
-// separate functions for each API endpoint instead.
-// NOTE: This does NOT check that your parameter values are valid. You should do that.
+app.get("/range", function(request, response) {
+  io.emit('range', range);
+});
 
-function handlePostRequest(request, response) {
-   printRequestInfo(request);
-   let result = '';
-   // iterate over the properties in request.params:
-   for (property in request.params) {
-      // set the thermostat item with the same name as the
-      // param that's set in request.params:
-      sound[property] = request.params[property];
-      thermostat[property] = request.params[property];
-      // thermostat[property] = request.params[property];
-      // sound[property] = request.params[property];
-      // save the result so you can reply to the client:
-      result = request.params[property];
-   }
+//handle POST requests
+app.post("/", function(request, response){
+  var body = "";
+  request.on('data', function(chunk){
+    body += chunk;
 
-    response.end(result.toString());
-}
+    for (let i = 0; i<4; i++){
+      var allData = body.split("&");
+      var oneData = allData[i].split("=");
 
-// this pulls put elements of the request which you may want:
-function printRequestInfo(request) {
-   // the IP address of the client, the request method, and the path:
-   console.log('Client IP address: ' + request.ip);
-   console.log('Request method: ' + request.method);
-   // the path is the API endpoint:
-   console.log('Request path: ' + request.path);
+      switch(i){
+        case 0:
+          range.setpoint_temp_min = oneData[1];
+          break;
 
-   // if it's a POST request, you might want the params or
-   // the body:
-   if (request.method === 'POST') {
-      console.log('Request parameters: ');
-      console.log(request.params);
-      console.log('Request body: ');
-      console.log(request.body);
-   }
-   // If it's a GET, you can only query. It's not
-   // very RESTful, but here's how you do it:
-   if (request.method === 'GET') {
-      console.log('Request Query: ');
-      console.log(request.query);
-   }
-}
+        case 1:
+          range.setpoint_temp_max = oneData[1];
+          break;
 
-// here are all your endpoints. The pattern is:
-// GET the  current value, or
-// POST the new value as a request param:
-server.get('/temp', handleGetRequest);
-server.get('/moisture', handleGetRequest);
+        case 2:
+          range.setpoint_moisture_min = oneData[1];
+          break;
 
-// TEMPERATURE GET AND POST
-server.get('/setpoint_temp_max', handleGetRequest);
-server.get('/setpoint_temp_min', handleGetRequest);
-server.post('/setpoint_temp_max/:setpoint_temp_max', handlePostRequest);
-server.post('/setpoint_temp_min/:setpoint_temp_min', handlePostRequest);
+        case 3:
+          range.setpoint_moisture_max = oneData[1];
+          break;
+      }
+    }
 
-//MOISTURE GET AND POST
-server.get('/setpoint_moisture_max', handleGetRequest);
-server.get('/setpoint_moisture_min', handleGetRequest);
-server.post('/setpoint_moisture_max/:setpoint_moisture_max', handlePostRequest);
-server.post('/setpoint_moisture_min/:setpoint_moisture_min', handlePostRequest);
+    console.log(range);
+  });
 
-//SOUND POST AND GET
-server.post('/song/:song', handlePostRequest);
-server.post('/story/:story', handlePostRequest);
-server.get('/song', handleGetRequest);
-server.get('/story', handleGetRequest);
-
-//GET STATUS
-server.get('/status', handleGetRequest);
-
-server.listen(8080);                      // start the server
+  request.on('end', function(){
+    console.log('POSTed: ' + body);
+    response.writeHead(200);
+    response.end();
+  });
+});
