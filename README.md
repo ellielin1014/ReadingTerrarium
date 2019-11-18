@@ -54,7 +54,7 @@ GET /thermostat/story
 1. Set the range of optimal temperature and soil mositure, data will return as:
 ```json
 range = {
-   'setpoint_temp_min': 10.0,       
+   setpoint_temp_min: 10.0,       
    'setpoint_temp_max': 30.0,
    'setpoint_moisture_min': 20.0,
    'setpoint_moisture_max': 40.0
