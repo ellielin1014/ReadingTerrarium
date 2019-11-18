@@ -52,16 +52,16 @@ GET /thermostat/story
 
 ### JSON format
 1. Set the range of optimal temperature and soil mositure, data will return as:
-```json
+
 range = {
    'setpoint_temp_min': 10.0,       
    'setpoint_temp_max': 30.0,
    'setpoint_moisture_min': 20.0,
    'setpoint_moisture_max': 40.0
 }
-```
+
 2. Check the current terrarium environment, data will return as:
-```json
+
 thermostat = {
    'temp': 14.0,            
    'moisture': 30.0,
@@ -69,4 +69,3 @@ thermostat = {
    'song': 'A song',  //song title
    'story': 'A story' //story title
 }
-```
