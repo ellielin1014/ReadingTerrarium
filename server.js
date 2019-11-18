@@ -25,7 +25,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);				         // create a server using express
 let bodyParser = require('body-parser');	   // include body-parser
 
-server.listen(process.env.PORT);             // start the server
+server.listen(8080);             // start the server
 
 app.use('/', express.static('public'));   // app static files from /public
 
