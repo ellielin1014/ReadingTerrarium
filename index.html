@@ -9,17 +9,21 @@
 
     <link rel="stylesheet" href="/style.css">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   </head>
   <body>
     <h1>How's your terrarium?</h1>
     <h3>Set my terrarium's temperature and soil moisture range</h3>
-    <form action="#" method="post">
+    <form action="#" method="post" name="setRange" id="form">
       Min Temp: <input type="text" name="temp_min" id="temp_min">
       Max Temp: <input type="text" name="temp_max" id="temp_max"> <br><br>
       Min Moisture: <input type="text" name="moisture_min" id="moisture_min">
       Max Moisture: <input type="text" name="moisture_max" id="mositure_max"> <br><br>
-      <input id="submit" type="submit" value="Submit">
+
+      <input type="button" value="Submit" onclick="takeValues()" >
+
     </form>
+
     <br><br>
 
     <button onclick="getRange('http://localhost:8080/range')">Get range</button>

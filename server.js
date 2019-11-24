@@ -25,12 +25,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);				         // create a server using express
 let bodyParser = require('body-parser');	   // include body-parser
 
-server.listen(8080);             // start the server
+server.listen(process.env.PORT);             // start the server
 
 app.use('/', express.static('public'));   // app static files from /public
 
 app.get("/", function(request, response) {
-  response.sendFile(__dirname + "/index.html");
+  response.sendFile(__dirname + "/views/index.html");
 });
 
 
@@ -45,9 +45,9 @@ let range = {
 let thermostat = {
    'temp': 120.0,            // temperature in degrees C, a float
    'moisture': 30.0,
-   'status': 'healthy',
-   'song': 'A song',  // the number of the song, int
-   'story': 'A story'// healthy
+   'status': 'healthy',      // healthy, unhealthy
+   'song': 'A song',         // the name of the song, string
+   'story': 'A story'        // the name of the story, string
 }
 
 
@@ -93,6 +93,8 @@ app.post("/", function(request, response){
 
     console.log(range);
   });
+
+
 
   request.on('end', function(){
     console.log('POSTed: ' + body);
