@@ -34,6 +34,9 @@ app.get("/", function(request, response) {
   response.sendFile(__dirname + "/index.html");
 });
 
+io.on('connection', function(socket){
+  console.log(socket.id);
+})
 
 // make a data object representing all your parameters:
 let range = {
