@@ -49,7 +49,7 @@ http.createServer(server).listen(process.env.PORT);
 
 
 server.get("/", function(request, response) {
-  response.sendFile(__dirname + "/views/index.html");
+  response.sendFile(__dirname + "/index.html");
 });
 
 
