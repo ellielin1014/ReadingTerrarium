@@ -1,4 +1,4 @@
-var url = 'https://reading-terrarium.glitch.me';
+var url = 'https://glacial-gorge-11971.herokuapp.com/';
 
 function setup(){
   noCanvas();

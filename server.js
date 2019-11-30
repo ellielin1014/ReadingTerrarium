@@ -26,26 +26,26 @@ const server = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
 
-var options = {
-  key: fs.readFileSync('./keys/domain.key'),
-  cert: fs.readFileSync('./keys/domain.crt')
-};
+// var options = {
+//   key: fs.readFileSync('./keys/domain.key'),
+//   cert: fs.readFileSync('./keys/domain.crt')
+// };
 
-server.use('*', httpRedirect);
+//server.use('*', httpRedirect);
 server.use('/', express.static('public'));
 
-function httpRedirect(request, response, next) {
-  if (!request.secure) {
-    console.log("redirecting http request to https");
-    response.redirect('https://' + request.hostname + request.url);
-  } else {
-    next();
-  }
-}
+// function httpRedirect(request, response, next) {
+//   if (!request.secure) {
+//     console.log("redirecting http request to https");
+//     response.redirect('https://' + request.hostname + request.url);
+//   } else {
+//     next();
+//   }
+// }
 
 http.createServer(server).listen(process.env.PORT);
 //https.createServer(options, server).listen(8080);
-https.createServer(options, server).listen(443);
+//https.createServer(options, server).listen(443);
 
 
 server.get("/", function(request, response) {
