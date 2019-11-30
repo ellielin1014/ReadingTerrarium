@@ -16,8 +16,7 @@ function getStatus() {
   terrariumStatus_status.innerHTML = res;});
 
   httpDo(url+'/sound', 'GET', function (res){
-  terrariumStatus_sound.innerHTML = res;
-  });
+  terrariumStatus_sound.innerHTML = res;});
 
   updateButtonState();
 }

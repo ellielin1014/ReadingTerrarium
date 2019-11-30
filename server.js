@@ -116,6 +116,7 @@ function handleGetRangeRequest(request, response) {
   response.send(setRange.toString());
 };
 
+
 function handlePlayRequest(request, response) {
   let buttonState = '';
   if(request.path == '/playPause') {
