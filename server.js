@@ -19,56 +19,136 @@
    you can POST to them.
 */
 
-let express = require('express');	         // include the express library
-const app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);				         // create a server using express
-let bodyParser = require('body-parser');	   // include body-parser
+var express = require('express');
+var https = require('https');
+var http = require('http');
+const server = express();
+var fs = require('fs');
+var bodyParser = require('body-parser');
 
-// server.listen(process.env.PORT);
-server.listen(8080);           // start the server
+var options = {
+  key: fs.readFileSync('./keys/domain.key'),
+  cert: fs.readFileSync('./keys/domain.crt')
+};
 
-app.use('/', express.static('public'));   // app static files from /public
+server.use('*', httpRedirect);
+server.use('/', express.static('public'));
 
-app.get("/", function(request, response) {
-  response.sendFile(__dirname + "/index.html");
+function httpRedirect(request, response, next) {
+  if (!request.secure) {
+    console.log("redirecting http request to https");
+    response.redirect('https://' + request.hostname + request.url);
+  } else {
+    next();
+  }
+}
+
+http.createServer(server).listen(process.env.PORT);
+//https.createServer(options, server).listen(8080);
+https.createServer(options, server).listen(443);
+
+
+server.get("/", function(request, response) {
+  response.sendFile(__dirname + "/views/index.html");
 });
 
-io.on('connection', function(socket){
-  console.log(socket.id);
-})
+
 
 // make a data object representing all your parameters:
 let range = {
-   'setpoint_temp_min': 10.0,        // the temperature setpoint
-   'setpoint_temp_max': 30.0,
-   'setpoint_moisture_min': 20.0,
-   'setpoint_moisture_max': 40.0
+   'setpoint_temp_min': 10.0,        // the temperature minimum setpoint
+   'setpoint_temp_max': 30.0,        // the temperature maximum setpoint
+   'setpoint_moisture_min': 20.0,    // the moisture maximum setpoint
+   'setpoint_moisture_max': 40.0     // the moisture minimum setpoint
 }
 
 let thermostat = {
-   'temp': 120.0,            // temperature in degrees C, a float
-   'moisture': 30.0,
-   'status': 'healthy',      // healthy, unhealthy
-   'song': 'A song',         // the name of the song, string
-   'story': 'A story'        // the name of the story, string
+   'temp': 120.0,            // current temperature
+   'moisture': 30.0,         // current moisture
+   'status': 'healthy',      // current status, healthy or unhealthy
+   'sound': ''               // the name of the sound, song or story, string
 }
 
 
-
+//--------------------------------------------------------------------------
 //handle GET requests
-app.get("/thermostat", function(request, response) {
+function handleGetRequest(request, response) {
   thermostat.status = (thermostat.temp > range.setpoint_temp_min && thermostat.temp < range.setpoint_temp_max && thermostat.moisture > range.setpoint_moisture_min && thermostat.moisture < range.setpoint_moisture_max) ? 'healthy' : 'unhealthy';
-  io.emit('thermostat', thermostat);
-});
+  thermostat.sound = (thermostat.temp > range.setpoint_temp_min && thermostat.temp < range.setpoint_temp_max && thermostat.moisture > range.setpoint_moisture_min && thermostat.moisture < range.setpoint_moisture_max) ? 'song' : 'story';
+  let currentStat = '';
+  switch (request.path) {
+    case '/temp':
+      currentStat = thermostat.temp;
+      break;
+    case '/moisture':
+      currentStat = thermostat.moisture;
+      break;
+    case '/status':
+      currentStat = thermostat.status;
+      break;
+    case '/sound':
+      currentStat = thermostat.sound;
+      break;
+  }
+  response.send(currentStat.toString());
+};
 
-app.get("/range", function(request, response) {
-  io.emit('range', range);
-});
+function handleGetRangeRequest(request, response) {
+  let setRange = '';
+  switch (request.path) {
+    case '/setpoint_temp_min':
+      setRange = range.setpoint_temp_min;
+      break;
+    case '/setpoint_temp_max':
+      setRange = range.setpoint_temp_max;
+      break;
+    case '/setpoint_moisture_min':
+      setRange = range.setpoint_moisture_min;
+      break;
+    case '/setpoint_moisture_max':
+      setRange = range.setpoint_moisture_max;
+      break;
+  }
+  response.send(setRange.toString());
+};
 
+
+
+
+//--------------------------------------------------------------------------
 //handle POST requests
-app.post("/", function(request, response){
-  var body = "";
+
+// 1. handling request from the Arduino client
+server.post("/thermostat", function (request, response) {
+  var sensorReading = '';
+  request.on('data', function(chunk){
+    sensorReading += chunk;
+        for (let i = 0; i<2; i++){
+      var allData = sensorReading.split("&");
+      var oneData = allData[i].split("=");
+
+      switch(i){
+        case 0:
+          thermostat.temp = oneData[1];
+          break;
+
+        case 1:
+          thermostat.moisture = oneData[1];
+          break;
+      }
+    }
+  });
+
+  request.on('end', function(){
+    response.writeHead(200);
+    response.end();
+  });
+});
+
+
+// 2. handling request from the web client
+server.post("/", function(request, response){
+  var body = '';
   request.on('data', function(chunk){
     body += chunk;
 
@@ -95,14 +175,20 @@ app.post("/", function(request, response){
       }
     }
 
-    console.log(range);
   });
 
-
-
   request.on('end', function(){
-    console.log('POSTed: ' + body);
     response.writeHead(200);
     response.end();
   });
 });
+
+
+server.get('/temp', handleGetRequest);
+server.get('/moisture', handleGetRequest);
+server.get('/status', handleGetRequest);
+server.get('/sound', handleGetRequest);
+server.get('/setpoint_temp_min', handleGetRangeRequest);
+server.get('/setpoint_temp_max', handleGetRangeRequest);
+server.get('/setpoint_moisture_min', handleGetRangeRequest);
+server.get('/setpoint_moisture_max', handleGetRangeRequest);

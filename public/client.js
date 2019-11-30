@@ -1,27 +1,40 @@
-var socket = io();
-var terrariumData;
+var url = 'https://reading-terrarium.glitch.me';
 
-socket.on('thermostat', data => {
-  terrariumData = data;
-  terrariumStatus_temp.innerHTML = terrariumData.temp;
-  terrariumStatus_moisture.innerHTML = terrariumData.moisture;
-  terrariumStatus_status.innerHTML = terrariumData.status;
-
-  if(terrariumData.status = 'healthy'){
-  terrariumStatus_sound.innerHTML = terrariumData.song;
-  } else{
-    terrariumStatus_sound.innerHTML = terrariumData.story;
-  }
-});
+function setup(){
+  noCanvas();
+}
 
 
-socket.on('range', data => {
-  terrariumData = data;
-  terrariumRange_temp_min.innerHTML = terrariumData.setpoint_temp_min;
-  terrariumRange_temp_max.innerHTML = terrariumData.setpoint_temp_max;
-  terrariumRange_moisture_min.innerHTML = terrariumData.setpoint_moisture_min;
-  terrariumRange_moisture_max.innerHTML = terrariumData.setpoint_moisture_max;
-});
+function getStatus() {
+  httpDo(url+'/temp', 'GET', function (res){
+  terrariumStatus_temp.innerHTML = res;});
+
+  httpDo(url+'/moisture', 'GET', function (res){
+  terrariumStatus_moisture.innerHTML = res;});
+
+  httpDo(url+'/status', 'GET', function (res){
+  terrariumStatus_status.innerHTML = res;});
+
+  httpDo(url+'/sound', 'GET', function (res){
+  terrariumStatus_sound.innerHTML = res;
+  });
+}
+
+
+function getRange() {
+  httpDo(url+'/setpoint_temp_min', 'GET', function (res){
+  terrariumRange_temp_min.innerHTML = res;});
+
+  httpDo(url+'/setpoint_temp_max', 'GET', function (res){
+  terrariumRange_temp_max.innerHTML = res;});
+
+  httpDo(url+'/setpoint_moisture_min', 'GET', function (res){
+  terrariumRange_moisture_min.innerHTML = res;});
+
+  httpDo(url+'/setpoint_moisture_max', 'GET', function (res){
+  terrariumRange_moisture_max.innerHTML = res;
+  });
+}
 
 
 function takeValues(){
@@ -45,14 +58,14 @@ function SubForm(){
   var moisture_min = document.forms["setRange"]["moisture_min"].value;
   var moisture_max = document.forms["setRange"]["moisture_max"].value;
 
-  var  data=$(document.getElementsByTagName("form")[0]).closest('form').serialize();
+  var data=$(document.getElementsByTagName("form")[0]).closest('form').serialize();
 
-  console.log(data);
   $.ajax({
         url:'#',
         type:'POST',
         data: data,
         success:function(){
+
   terrariumRange_temp_min.innerHTML = temp_min;
   terrariumRange_temp_max.innerHTML = temp_max;
   terrariumRange_moisture_min.innerHTML = moisture_min;
@@ -61,14 +74,7 @@ function SubForm(){
   document.forms["setRange"]["temp_max"].value = '';
   document.forms["setRange"]["moisture_min"].value = '';
   document.forms["setRange"]["moisture_max"].value = '';
+  getStatus();
        }
    });
-}
-
-function getStatus(endpoint) {
-  fetch(endpoint)
-}
-
-function getRange(endpoint) {
-  fetch(endpoint)
 }

@@ -6,11 +6,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="/style.css">
-    <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+    <script src="/client.js"></script>
   </head>
+
   <body>
     <h1>How's your terrarium?</h1>
     <h3>Set my terrarium's temperature and soil moisture range</h3>
@@ -18,7 +19,7 @@
       Min Temp: <input type="text" name="temp_min" id="temp_min">
       Max Temp: <input type="text" name="temp_max" id="temp_max"> <br><br>
       Min Moisture: <input type="text" name="moisture_min" id="moisture_min">
-      Max Moisture: <input type="text" name="moisture_max" id="mositure_max"> <br><br>
+      Max Moisture: <input type="text" name="moisture_max" id="moisture_max"> <br><br>
 
       <input type="button" value="Submit" onclick="takeValues()" >
 
@@ -26,13 +27,13 @@
 
     <br><br>
 
-    <button onclick="getRange('http://localhost:8080/range')">Get range</button>
+    <button onclick="getRange('https://reading-terrarium.glitch.me/range')">Get range</button>
 
     <p>The Temperature Range you set is: <span id="terrariumRange_temp_min"></span> to <span id="terrariumRange_temp_max"></span></p>
     <p>The Moisture Range you set is: <span id="terrariumRange_moisture_min"></span> to <span id="terrariumRange_moisture_max"></span></p>
 
 
-    <button onclick="getStatus('http://localhost:8080/thermostat')">Get status</button>
+    <button onclick="getStatus('https://reading-terrarium.glitch.me/thermostat')">Get status</button>
 
     <p>Current Temperature is:<span id="terrariumStatus_temp"></span></p>
     <p>Current Moisture is:<span id="terrariumStatus_moisture"></span></p>
@@ -40,7 +41,4 @@
     <p>Current sound playing is: <span id="terrariumStatus_sound"></span></p>
 
   </body>
-  <foot>
-    <script src="/client.js" defer></script>
-  </foot>
 </html>
