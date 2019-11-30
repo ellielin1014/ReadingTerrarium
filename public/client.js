@@ -87,7 +87,7 @@ function updateButtonState(){
   var data = buttonState;
 
   $.ajax({
-        url:url+'/playPause',
+        url:'playPause',
         type:'POST',
         data: data,
         success:function(){
