@@ -1,4 +1,4 @@
-var url = 'https://glacial-gorge-11971.herokuapp.com/';
+var url = 'https://safe-castle-33498.herokuapp.com/';
 
 function setup(){
   noCanvas();
