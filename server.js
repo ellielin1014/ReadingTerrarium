@@ -69,6 +69,10 @@ let thermostat = {
    'sound': ''               // the name of the sound, song or story, string
 }
 
+let buttonState = {
+   'buttonState': 0          // current temperature
+}
+
 
 //--------------------------------------------------------------------------
 //handle GET requests
@@ -110,6 +114,14 @@ function handleGetRangeRequest(request, response) {
       break;
   }
   response.send(setRange.toString());
+};
+
+function handlePlayRequest(request, response) {
+  let buttonState = '';
+  if(request.path == '/playPause') {
+    playPause = buttonState.buttonState;
+  }
+  response.send(playPause.toString());
 };
 
 
@@ -184,6 +196,30 @@ server.post("/", function(request, response){
 });
 
 
+// 3. handling buttonState from the web client
+server.post("/playPause", function (request, response) {
+  var buttonState = '';
+  request.on('data', function(chunk){
+    buttonState += chunk;
+        for (let i = 0; i<1; i++){
+      var oneData = allData[i].split("=");
+
+      switch(i){
+        case 0:
+          buttonState.buttonState = oneData[1];
+          break;
+      }
+    }
+  });
+
+  request.on('end', function(){
+    response.writeHead(200);
+    response.end();
+  });
+});
+
+
+
 server.get('/temp', handleGetRequest);
 server.get('/moisture', handleGetRequest);
 server.get('/status', handleGetRequest);
@@ -192,3 +228,4 @@ server.get('/setpoint_temp_min', handleGetRangeRequest);
 server.get('/setpoint_temp_max', handleGetRangeRequest);
 server.get('/setpoint_moisture_min', handleGetRangeRequest);
 server.get('/setpoint_moisture_max', handleGetRangeRequest);
+server.get('/playPause', handlePlayRequest);

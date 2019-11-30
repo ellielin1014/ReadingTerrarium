@@ -18,6 +18,11 @@ function getStatus() {
   httpDo(url+'/sound', 'GET', function (res){
   terrariumStatus_sound.innerHTML = res;
   });
+
+  httpDo(url+'/playPause', 'POST', function (res){
+  var buttonState = Ture;
+  var data=$(document.getElementsByTagName("form")[0]).closest('form').serialize();
+  });
 }
 
 
@@ -34,7 +39,10 @@ function getRange() {
   httpDo(url+'/setpoint_moisture_max', 'GET', function (res){
   terrariumRange_moisture_max.innerHTML = res;
   });
+
+  updateButtonState();
 }
+
 
 
 function takeValues(){
@@ -75,6 +83,21 @@ function SubForm(){
   document.forms["setRange"]["moisture_min"].value = '';
   document.forms["setRange"]["moisture_max"].value = '';
   getStatus();
+       }
+   });
+}
+
+function updateButtonState(){
+  //e.preventDefault();
+  var buttonState = 'buttonState=1';
+  var data = buttonState;
+
+  $.ajax({
+        url:'/playPause',
+        type:'POST',
+        data: data,
+        success:function(){
+            buttonState = 'buttonState=0';
        }
    });
 }
