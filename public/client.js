@@ -19,10 +19,7 @@ function getStatus() {
   terrariumStatus_sound.innerHTML = res;
   });
 
-  httpDo(url+'/playPause', 'POST', function (res){
-  var buttonState = Ture;
-  var data=$(document.getElementsByTagName("form")[0]).closest('form').serialize();
-  });
+  updateButtonState();
 }
 
 
@@ -39,8 +36,6 @@ function getRange() {
   httpDo(url+'/setpoint_moisture_max', 'GET', function (res){
   terrariumRange_moisture_max.innerHTML = res;
   });
-
-  updateButtonState();
 }
 
 
