@@ -77,7 +77,7 @@ function SubForm(){
   document.forms["setRange"]["temp_max"].value = '';
   document.forms["setRange"]["moisture_min"].value = '';
   document.forms["setRange"]["moisture_max"].value = '';
-  getStatus();
+  //getStatus();
        }
    });
 }
