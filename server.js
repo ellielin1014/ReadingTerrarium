@@ -52,7 +52,8 @@ server.get("/", function(request, response) {
   response.sendFile(__dirname + "/index.html");
 });
 
-
+server.use(bodyParser.json()); 						  // for  application/json
+server.use(bodyParser.urlencoded({extended: false}));
 
 // make a data object representing all your parameters:
 let range = {
