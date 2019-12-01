@@ -53,7 +53,7 @@ server.get("/", function(request, response) {
 });
 
 server.use(bodyParser.json()); 						  // for  application/json
-server.use(bodyParser.urlencoded({extended: false}));
+server.use(bodyParser.urlencoded({extended: true}));
 
 // make a data object representing all your parameters:
 let range = {
