@@ -122,7 +122,7 @@ function handleGetRangeRequest(request, response) {
 function handlePlayRequest(request, response) {
   let buttonString = '';
   if(request.path == '/playPause') {
-    buttonString = buttonState.buttonState;
+    buttonString = buttonState.buttonState + thermostat.sound;
   }
   response.send(buttonString.toString());
 
@@ -205,13 +205,8 @@ server.post("/playPause", function (request, response) {
   var comingData = '';
   request.on('data', function(chunk){
     comingData += chunk;
-
-
-
-        for (let i = 0; i<1; i++){
-
+      for (let i = 0; i<1; i++){
       var oneData = comingData.split("=");
-
       switch(i){
         case 0:
           buttonState.buttonState = oneData[1];
