@@ -92,7 +92,7 @@ function updateButtonState(){
         type:'POST',
         data: data,
         success:function(){
-        setTimeout(resetButton, 5000);
+        setTimeout(resetButton, 6000);
        }
    });
 }
