@@ -122,7 +122,7 @@ function handleGetRangeRequest(request, response) {
 function handlePlayRequest(request, response) {
   let buttonString = '';
   if(request.path == '/playPause') {
-    buttonString = buttonState.buttonState + thermostat.sound;
+    buttonString = buttonState.buttonState.concat('', thermostat.sound) ;
   }
   response.send(buttonString.toString());
 
