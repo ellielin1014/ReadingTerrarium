@@ -27,15 +27,15 @@
 
     <br><br>
 
-    <button onclick="getRange('https://reading-terrarium.herokuapp.com/range')">Get range</button>
-    <!-- <button onclick="getRange('http://localhost:8080/range')">Get range</button> -->
+    <!-- <button onclick="getRange('https://reading-terrarium.herokuapp.com/range')">Get range</button> -->
+    <button onclick="getRange('http://localhost:8080/range')">Get range</button>
 
     <p>The Temperature Range you set is: <span id="terrariumRange_temp_min"></span> to <span id="terrariumRange_temp_max"></span></p>
     <p>The Moisture Range you set is: <span id="terrariumRange_moisture_min"></span> to <span id="terrariumRange_moisture_max"></span></p>
 
 
-    <button onclick="getStatus('https://reading-terrarium.herokuapp.com/thermostat')">Get status</button>
-    <!-- <button onclick="getStatus('http://localhost:8080/thermostat')">Get Status</button> -->
+    <!-- <button onclick="getStatus('https://reading-terrarium.herokuapp.com/thermostat')">Get status</button> -->
+    <button onclick="getStatus('http://localhost:8080/thermostat')">Get Status</button>
     <p>Current Temperature is:<span id="terrariumStatus_temp"></span></p>
     <p>Current Moisture is:<span id="terrariumStatus_moisture"></span></p>
     <p>Current Status is: <span id="terrariumStatus_status"></span></p>

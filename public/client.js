@@ -1,5 +1,5 @@
-var url = 'https://reading-terrarium.herokuapp.com';
-//var url = 'http://localhost:8080';
+//var url = 'https://reading-terrarium.herokuapp.com';
+var url = 'http://localhost:8080';
 
 function setup(){
   noCanvas();
@@ -92,7 +92,7 @@ function updateButtonState(){
         type:'POST',
         data: data,
         success:function(){
-        setTimeout(resetButton, 3000);
+        setTimeout(resetButton, 5000);
        }
    });
 }
