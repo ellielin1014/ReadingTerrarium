@@ -18,10 +18,10 @@ int buttonPin = 6;      // pin for the pushbutton
 int lastButtonState = HIGH;   // previous state of the pushbutton
 
 // make an instance of the MP3 player library:
-//Adafruit_VS1053_FilePlayer musicPlayer =
-//  Adafruit_VS1053_FilePlayer(VS1053_RESET, VS1053_CS, VS1053_DCS, VS1053_DREQ, CARDCS);
-//
-//const char soundFile[] = "sound001.MP3";
+Adafruit_VS1053_FilePlayer musicPlayer =
+  Adafruit_VS1053_FilePlayer(VS1053_RESET, VS1053_CS, VS1053_DCS, VS1053_DREQ, CARDCS);
+
+const char soundFile[] = "sound001.MP3";
 
 //server
 const char serverAddress[] = "reading-terrarium.herokuapp.com";  // server address
@@ -59,16 +59,16 @@ void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
   
   // initialize the MP3 player:
-//  if (! musicPlayer.begin()) {
-//    Serial.println("Couldn't find VS1053. Do you have the right pin numbers set?");
-//    while (true);
-//  }
+  if (! musicPlayer.begin()) {
+    Serial.println("Couldn't find VS1053. Do you have the right pin numbers set?");
+    while (true);
+  }
 
   // start communication with the MP3 shield:
-//  if (!SD.begin(CARDCS)) {
-//    Serial.println("SD failed, or not present");
-//    while (true);  // don't do anything more
-//  }
+  if (!SD.begin(CARDCS)) {
+    Serial.println("SD failed, or not present");
+    while (true);  // don't do anything more
+  }
 
   // Set volume for left and right channels.
   // 0 = loudest, 100 = silent:
@@ -101,19 +101,19 @@ void loop() {
 //    Serial.println(statusCode);
     Serial.print("Response: ");
     Serial.println(response);
-    haveStatusCode = false;
-  }
 
-  if (response == "0 song"){
-//    musicPlayer.setVolume(10, 10);
-//    musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
-//    musicPlayer.startPlayingFile("/sound001.MP3");
+    if (response == "0 song"){
+    musicPlayer.setVolume(10, 10);
+    musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
+    musicPlayer.startPlayingFile("/sound001.MP3");
     Serial.println("song playing");
   } else if (response == "1 story"){
     Serial.println("story playing");
-  } else {
-   
   }
+    haveStatusCode = false;
+  }
+
+  
   
   // read a potentiometer to set volume:
 //  int loudness = map(analogRead(A1), 0, 1023, 100, 0);
