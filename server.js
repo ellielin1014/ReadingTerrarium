@@ -43,8 +43,8 @@ server.use('/', express.static('public'));
 //   }
 // }
 
-// http.createServer(server).listen(process.env.PORT || 443);
-http.createServer(server).listen(8080);
+http.createServer(server).listen(process.env.PORT || 443);
+// http.createServer(server).listen(8080);
 //https.createServer(options, server).listen(443);
 
 
