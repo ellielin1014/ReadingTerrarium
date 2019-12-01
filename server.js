@@ -44,7 +44,7 @@ server.use('/', express.static('public'));
 // }
 
 http.createServer(server).listen(process.env.PORT);
-//https.createServer(options, server).listen(8080);
+// http.createServer(server).listen(8080);
 //https.createServer(options, server).listen(443);
 
 
@@ -118,11 +118,12 @@ function handleGetRangeRequest(request, response) {
 
 
 function handlePlayRequest(request, response) {
-  let buttonState = '';
+  let buttonString = '';
   if(request.path == '/playPause') {
-    playPause = buttonState.buttonState;
+    buttonString = buttonState.buttonState;
   }
-  response.send(playPause.toString());
+  response.send(buttonString.toString());
+
 };
 
 
@@ -199,11 +200,15 @@ server.post("/", function(request, response){
 
 // 3. handling buttonState from the web client
 server.post("/playPause", function (request, response) {
-  var buttonState = '';
+  var comingData = '';
   request.on('data', function(chunk){
-    buttonState += chunk;
+    comingData += chunk;
+
+
+
         for (let i = 0; i<1; i++){
-      var oneData = allData[i].split("=");
+
+      var oneData = comingData.split("=");
 
       switch(i){
         case 0:
@@ -215,6 +220,7 @@ server.post("/playPause", function (request, response) {
 
   request.on('end', function(){
     response.writeHead(200);
+
     response.end();
   });
 });

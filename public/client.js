@@ -1,4 +1,5 @@
 var url = 'https://reading-terrarium.herokuapp.com';
+//var url = 'http://localhost:8080';
 
 function setup(){
   noCanvas();
@@ -87,11 +88,26 @@ function updateButtonState(){
   var data = buttonState;
 
   $.ajax({
-        url:'playPause',
+        url:'/playPause',
         type:'POST',
         data: data,
         success:function(){
-            buttonState = 'buttonState=0';
+        setTimeout(resetButton, 3000);
+       }
+   });
+}
+
+function resetButton(){
+  //e.preventDefault();
+  var buttonState = 'buttonState=0';
+  var data = buttonState;
+
+  $.ajax({
+        url:'/playPause',
+        type:'POST',
+        data: data,
+        success:function(){
+        console.log('reset');
        }
    });
 }
