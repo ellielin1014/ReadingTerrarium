@@ -21,7 +21,8 @@ int lastButtonState = HIGH;   // previous state of the pushbutton
 Adafruit_VS1053_FilePlayer musicPlayer =
   Adafruit_VS1053_FilePlayer(VS1053_RESET, VS1053_CS, VS1053_DCS, VS1053_DREQ, CARDCS);
 
-const char soundFile[] = "sound001.MP3";
+char* soundFile[] = {"sound001.MP3", "story002.MP3"};
+//const char soundFile[] = "sound001.MP3";
 
 //server
 const char serverAddress[] = "reading-terrarium.herokuapp.com";  // server address
@@ -79,21 +80,9 @@ void setup() {
 }
 
 void loop() {
-  // get server request
-    if (millis() - lastRequest > interval) {
-    Serial.println("making a request");
-    // assemble the path for the GET message:
-    String path = "/playPause";
-    client.get(path);
-    lastRequest = millis();
-
-    // read the status code and body of the response
-    statusCode = client.responseStatusCode();
-    haveStatusCode = true;
-    Serial.print("Status code: ");
-    Serial.println(statusCode);
+  if (millis() - lastRequest > interval) {
+    getSound();
   }
-
   if (statusCode >= 0 && haveStatusCode == true) { // basically if the server sends any valid http response code
 //    Serial.println("We have a response!");
     response = client.responseBody();
@@ -102,22 +91,23 @@ void loop() {
     Serial.print("Response: ");
     Serial.println(response);
 
-    if (response == "0 song"){
+    if (response == "1 song"){
     musicPlayer.setVolume(10, 10);
     musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
     musicPlayer.startPlayingFile("/sound001.MP3");
     Serial.println("song playing");
   } else if (response == "1 story"){
+     musicPlayer.setVolume(10, 10);
+    musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
+    musicPlayer.startPlayingFile("/story002.MP3");
     Serial.println("story playing");
   }
     haveStatusCode = false;
   }
-
-  
   
   // read a potentiometer to set volume:
-//  int loudness = map(analogRead(A1), 0, 1023, 100, 0);
-//  musicPlayer.setVolume(loudness, loudness);
+  int loudness = map(analogRead(A1), 0, 1023, 100, 0);
+  musicPlayer.setVolume(loudness, loudness);
 //
 //  // loop the player:
 //  if (musicPlayer.stopped()) {
@@ -140,4 +130,21 @@ void loop() {
 //  // save current button state for comparison next time:
 //  lastButtonState = buttonState;
 //  Serial.println(buttonState);
+}
+
+void getSound(){
+    // get server request
+//    if (millis() - lastRequest > interval) {
+    Serial.println("making a request");
+    // assemble the path for the GET message:
+    String path = "/playPause";
+    client.get(path);
+    lastRequest = millis();
+
+    // read the status code and body of the response
+    statusCode = client.responseStatusCode();
+    haveStatusCode = true;
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+//  }
 }
