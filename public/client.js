@@ -17,7 +17,14 @@ function getStatus() {
   terrariumStatus_status.innerHTML = res;});
 
   httpDo(url+'/sound', 'GET', function (res){
-  terrariumStatus_sound.innerHTML = res;});
+  terrariumStatus_sound.innerHTML = res;
+  if (terrariumStatus_sound.innerHTML == "story") {
+    $("#body_background").css("background-color", "#444C38");
+  } else if (terrariumStatus_sound.innerHTML == "story") {
+     $("#body_background").css("background-color", "C7EA46");
+  }
+
+});
 
   updateButtonState();
 }
@@ -77,7 +84,6 @@ function SubForm(){
   document.forms["setRange"]["temp_max"].value = '';
   document.forms["setRange"]["moisture_min"].value = '';
   document.forms["setRange"]["moisture_max"].value = '';
-  //getStatus();
        }
    });
 }

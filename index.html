@@ -12,34 +12,37 @@
     <script src="/client.js"></script>
   </head>
 
-  <body>
+  <body id="body_background">
     <h1>How's your terrarium?</h1>
-    <h3>Set my terrarium's temperature and soil moisture range</h3>
+    <h4>Set your terrarium's optimal temperature and soil moisture range</h4>
+    <div class="input_box">
     <form action="#" method="post" name="setRange" id="form">
-      Min Temp: <input type="text" name="temp_min" id="temp_min">
-      Max Temp: <input type="text" name="temp_max" id="temp_max"> <br><br>
+      Min Temperature: <input type="text" name="temp_min" id="temp_min">
+      Max Temperature: <input type="text" name="temp_max" id="temp_max"> <br><br>
       Min Moisture: <input type="text" name="moisture_min" id="moisture_min">
       Max Moisture: <input type="text" name="moisture_max" id="moisture_max"> <br><br>
 
-      <input type="button" value="Submit" onclick="takeValues()" >
-
+      <input type="button" value="Submit" onclick="takeValues()" class="button" />
+      <!-- <button class="button" type="button"onclick="takeValues()"> <span>Submit</span></button> -->
     </form>
 
     <br><br>
 
-    <button onclick="getRange('https://reading-terrarium.herokuapp.com/range')">Get range</button>
+    <!-- <button onclick="getRange('https://reading-terrarium.herokuapp.com/range')">Get range</button> -->
     <!-- <button onclick="getRange('http://localhost:8080/range')">Get range</button> -->
 
     <p>The Temperature Range you set is: <span id="terrariumRange_temp_min"></span> to <span id="terrariumRange_temp_max"></span></p>
     <p>The Moisture Range you set is: <span id="terrariumRange_moisture_min"></span> to <span id="terrariumRange_moisture_max"></span></p>
 
 
-    <button onclick="getStatus('https://reading-terrarium.herokuapp.com/thermostat')">Get status</button>
-    <!-- <button onclick="getStatus('http://localhost:8080/thermostat')">Get Status</button> -->
-    <p>Current Temperature is:<span id="terrariumStatus_temp"></span></p>
-    <p>Current Moisture is:<span id="terrariumStatus_moisture"></span></p>
-    <p>Current Status is: <span id="terrariumStatus_status"></span></p>
-    <p>Current sound playing is: <span id="terrariumStatus_sound"></span></p>
 
+    <h4>Check how is your terrarium at this moment</h4>
+    <button onclick="getStatus('https://reading-terrarium.herokuapp.com/thermostat')">Get status</button>
+    <!-- <button class="button" onclick="getStatus('http://localhost:8080/thermostat')"><span>Check Status</span></button> -->
+    <p>Current Temperature is:<span id="terrariumStatus_temp"></span></p>
+    <p>Current Soil Moisture is:<span id="terrariumStatus_moisture"></span></p>
+    <p>Current Overall Status of Your Terrarium is: <span id="terrariumStatus_status"></span></p>
+    <p>Current Sound Playing is: <span id="terrariumStatus_sound"></span></p>
+</div>
   </body>
 </html>

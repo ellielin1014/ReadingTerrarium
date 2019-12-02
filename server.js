@@ -43,7 +43,7 @@ server.use('/', express.static('public'));
 //   }
 // }
 
-http.createServer(server).listen(process.env.PORT || 443);
+http.createServer(server).listen(process.env.PORT || 8080);
 // http.createServer(server).listen(8080);
 //https.createServer(options, server).listen(443);
 
@@ -79,7 +79,6 @@ let buttonState = {
 //handle GET requests
 function handleGetRequest(request, response) {
   thermostat.status = ((parseFloat(thermostat.temp) > parseFloat(range.setpoint_temp_min)) && (parseFloat(thermostat.temp) < parseFloat(range.setpoint_temp_max)) && (parseFloat(thermostat.moisture) > parseFloat(range.setpoint_moisture_min)) && (parseFloat(thermostat.moisture) < parseFloat(range.setpoint_moisture_max))) ? 'healthy' : 'unhealthy';
-
   thermostat.sound = ((parseFloat(thermostat.temp) > parseFloat(range.setpoint_temp_min)) && (parseFloat(thermostat.temp) < parseFloat(range.setpoint_temp_max)) && (parseFloat(thermostat.moisture) > parseFloat(range.setpoint_moisture_min)) && (parseFloat(thermostat.moisture) < parseFloat(range.setpoint_moisture_max))) ? 'song' : 'story';
   let currentStat = '';
   switch (request.path) {
