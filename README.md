@@ -66,7 +66,7 @@ thermostat = {
    'temp': 14.0,            
    'moisture': 30.0,
    'status': 'healthy', //healthy or unhealthy
-   'sound': ' ' //return either story or song in a string
+   'sound': ' ' //return either story or song in a string, this information will be send to Arduino
 }
 ```
 ### Arduino & Server
