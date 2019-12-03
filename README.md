@@ -69,5 +69,5 @@ thermostat = {
    'sound': ' ' //return either story or song in a string
 }
 ```
-### Arduino
-1. After setting the range of optimal temperature and soil moisture level (do once/whenever you want to adjust the level), you can click on the "Get Status" button at any time to see if your terrarium is in a healthy environment. The server will send "1 song" if the terrarium is healthy, and send "1 story" if the terrarium is unhealthy. The background color of the web interface will also change: it will be lighter if your terarrium is healthy, and darker if it is unhealthy. 
+### Arduino & Server
+After setting the range of optimal temperature and soil moisture level (do once/whenever you want to adjust the level), you can click on the "Get Status" button at any time to see if your terrarium is in a healthy environment. The server will send "1 song" if the terrarium is healthy, and send "1 story" if the terrarium is unhealthy. The background color of the web interface will also change: it will be lighter if your terarrium is healthy, and darker if it is unhealthy. 
